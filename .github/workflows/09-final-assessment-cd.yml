@@ -1,9 +1,10 @@
-name: 09 Final Assessment CD dev branch
+name: 09 Final Assessment CD dev branch devv
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: tiny-health-app
@@ -68,8 +69,11 @@ jobs:
 
       - name: Create full image reference
         id: image-ref
+        env:
+          REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
+          IMAGE_TAG: ${{ steps.image-tag.outputs.value }}
         run: |
-          IMAGE_REF="${{ secrets.REGISTRY_HOST }}/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.value }}"
+          IMAGE_REF="${REGISTRY_HOST}/${{ env.IMAGE_NAME }}:${IMAGE_TAG}"
           echo "value=$IMAGE_REF" >> "$GITHUB_OUTPUT"
           echo "Full image reference: $IMAGE_REF"
 
